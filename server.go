@@ -10,7 +10,12 @@ type vote struct {
 	Value int `json:"value"`
 }
 
-var connections = make([]*websocket.Conn, 10)
+type client struct {
+	conn *websocket.Conn
+	send chan vote
+}
+
+var c client
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -18,19 +23,40 @@ var upgrader = websocket.Upgrader{
 }
 
 func registerConnection(w http.ResponseWriter, r *http.Request) {
-	connection, _ := upgrader.Upgrade(w, r, nil)
-	connections = append(connections, connection)
+	conn, err := upgrader.Upgrade(w, r, nil)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	c = client{
+		conn: conn,
+		send: make(chan vote),
+	}
+
+	go receiveMessages(c)
+}
+
+func receiveMessages(c client) {
+	defer func() {
+		c.conn.Close()
+		fmt.Println("Closed connection")
+	}()
+
+	for vote := range c.send {
+		fmt.Println("Vote received on client channel")
+
+		c.conn.WriteJSON(vote)
+	}
 }
 
 func voteHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("Received response\n")
-	// TODO: Actually read text message :)
+	// body := r.FormValue("Body")
 
-	m := vote{Value: 0}
+	fmt.Println(r)
+	// fmt.Println(body)
 
-	for _, connection := range connections {
-		connection.WriteJSON(m)
-	}
+	c.send <- vote{Value: 1}
 
 	w.WriteHeader(http.StatusOK)
 }
