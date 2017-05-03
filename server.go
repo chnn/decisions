@@ -7,7 +7,7 @@ import (
 )
 
 type vote struct {
-	Value int `json:"value"`
+	Value string `json:"value"`
 }
 
 type client struct {
@@ -29,36 +29,33 @@ func registerConnection(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 
+	// TODO: More than one client
 	c = client{
 		conn: conn,
 		send: make(chan vote),
 	}
 
-	go receiveMessages(c)
+	go broadcastVotes(c)
 }
 
-func receiveMessages(c client) {
-	defer func() {
-		c.conn.Close()
-		fmt.Println("Closed connection")
-	}()
+func broadcastVotes(c client) {
+	defer c.conn.Close()
 
 	for vote := range c.send {
-		fmt.Println("Vote received on client channel")
-
 		c.conn.WriteJSON(vote)
 	}
 }
 
 func voteHandler(w http.ResponseWriter, r *http.Request) {
-	// body := r.FormValue("Body")
+	body := r.FormValue("Body")
 
-	fmt.Println(r)
-	// fmt.Println(body)
+	fmt.Printf("Received vote: %v\n", body)
 
-	c.send <- vote{Value: 1}
+	if c.send != nil {
+		c.send <- vote{Value: body}
+	}
 
-	w.WriteHeader(http.StatusOK)
+	fmt.Fprintf(w, "")
 }
 
 func main() {
