@@ -1,3 +1,35 @@
-{{#if loading}}
-  Loading...
-{{/if}}
+<div class="top">
+  {{#if displayQuestion}}
+    <div class="question">
+        {{currentVideoData.question}}
+    </div>
+    <div class="number">
+      (415) 965-7251
+    </div>
+  {{/if}}
+</div>
+<video src={{currentVideoURL}} autoplay></video>
+<div class="bottom">
+  {{#if displayQuestion}}
+    <div class="option">
+      {{vote-counter votes=optionAVotes}}
+      <div class="option-text">
+        <em>A.</em> {{currentVideoData.optionAText}}
+      </div>
+    </div>
+    <div class="option">
+      {{vote-counter votes=optionBVotes}}
+      <div class="option-text">
+        <em>B.</em> {{currentVideoData.optionBText}}
+      </div>
+    </div>
+    {{#if currentVideoData.optionCText}}
+      <div class="option">
+        {{vote-counter votes=optionCVotes}}
+        <div class="option-text">
+          {{currentVideoData.optionCText}}
+        </div>
+      </div>
+    {{/if}}
+  {{/if}}
+</div>
