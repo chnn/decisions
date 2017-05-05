@@ -1,1 +1,16 @@
-{{video-layout}}
+{{#if startedVideo}}
+  {{video-layout}}
+{{else}}
+  <div class="start-container">
+    <div class="help-text">
+      <p>Welcome to an interface. You will be shown a series of videos, after each of which you will offered a choice.</p>
+        
+      <p>Each choice is labeled either <em>A</em>, <em>B</em>, or <em>C</em>. To express your preference for a choice, text the corresponding letter to the following number:</p>
+
+      <div class="phone-number">(415) 965-7251</div>
+
+      <p>Be sure to choose carefully, and have a nice day!</p>
+    </div>
+    <div class="start-btn bordered-box" {{action "startVideo"}}>Start</div>
+  </div>
+{{/if}}

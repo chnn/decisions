@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  classNames: ['vote-counter'],
+  classNames: ['vote-counter', 'bordered-box'],
 
   votes: 0
 });

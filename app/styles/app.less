@@ -6,11 +6,58 @@ html, body {
   padding: 0;
   background: #230F2B;
   color: #EBEBBC;
+  text-shadow: 0.5px 0.5px 0 black;
 }
 
 html, body, body > .ember-view, .video-layout {
   width: 100%;
   height: 100%;
+}
+
+.start-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.start-btn {
+  padding: 15px;
+  cursor: pointer;
+  margin-top: 35px;
+  margin-bottom: 50px;
+}
+
+.bordered-box {
+  font-size: 48px;
+  display: flex;
+  border: 6px solid #F21D41;
+  background: #BCE3C5;
+  color: #230F2B;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Abril Fatface', cursive;
+
+  &:hover {
+    background-color: #EBEBBC;
+  }
+}
+
+.help-text {
+  font-family: 'Roboto', sans-serif;
+  width: 400px;
+  text-align: justify;
+
+  em {
+    color: #EBEBBC + 40%;
+    font-weight: bold;
+  }
+
+  .phone-number {
+    text-align: center;
+    font-style: italic;
+  }
 }
 
 // Colors from http://www.colourlovers.com/palette/678929/War
