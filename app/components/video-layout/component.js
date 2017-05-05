@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import WebSocketConnection from 'decisions/utils/websocket-connection';
 
 const manifest = [
   {
@@ -43,7 +42,6 @@ function findByKey(key, keyValue, coll) {
 export default Ember.Component.extend({
   classNames: ['video-layout'],
 
-  wsConnection: null,
   optionAVotes: 0,
   optionBVotes: 0,
   optionCVotes: 0,
@@ -57,17 +55,10 @@ export default Ember.Component.extend({
   init() {
     this._super(...arguments);
 
-    let wsConnection = new WebSocketConnection({
-      url: `ws://${location.host}/ws`,
+    let ws = new WebSocket(`ws://${location.host}/ws`);
 
-      onMessage: data => {
-        this.voteReceived(JSON.parse(data).value);
-      }
-    });
+    ws.onmessage = message => this.voteReceived(JSON.parse(message.data).value);
 
-    wsConnection.getWebSocket();
-
-    this.set('wsConnection', wsConnection);
     this.set('currentVideoData', manifest[0]);
   },
 
