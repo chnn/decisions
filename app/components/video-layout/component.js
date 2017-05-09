@@ -2,27 +2,105 @@ import Ember from 'ember';
 
 const manifest = [
   {
-    file: 'a.mp4',
-    optionAFile: 'b.mp4',
-    optionBFile: 'c.mp4',
-    optionAText: 'Meow!',
-    optionBText: 'Rawr!',
-    question: 'This is the question for a?'
+    file: '1.mp4',
+    option1File: '3.mp4',
+    option2File: '2.mp4'
   },
   {
-    file: 'b.mp4',
+    file: '3.mp4',
+    option1File: '6-5.mp4',
+    option2File: '4.mp4'
   },
   {
-    file: 'c.mp4',
-  }
+    file: '4.mp4',
+    option1File: '5.mp4',
+    option2File: '7.mp4'
+  },
+  {
+    file: '5.mp4',
+    option1File: '7.mp4',
+    option2File: '10-25.mp4'
+  },
+  {
+    file: '7.mp4',
+    option1File: '8-5.mp4',
+    option2File: '13-5.mp4'
+  },
+  {
+    file: '6-5.mp4',
+    option1File: '13-5.mp4',
+    option2File: '8-25.mp4'
+  },
+  {
+    file: '8-5.mp4',
+    option1File: '10.mp4',
+    option2File: '10.mp4',
+    option3File: '10.mp4'
+  },
+  {
+    file: '8-25.mp4',
+    option1File: '10.mp4',
+    option2File: '10.mp4',
+    option3File: '10.mp4'
+  },
+  {
+    file: '10-25.mp4',
+    option1File: '11.mp4',
+    option2File: '12.mp4'
+  },
+  {
+    file: '13-5.mp4',
+    option1File: '8-25.mp4',
+    option2File: '14.mp4'
+  },
+  {
+    file: '11.mp4',
+    isLastVideo: true,
+  },
+  {
+    file: '12.mp4',
+    isLastVideo: true,
+  },
+  {
+    file: '14.mp4',
+    option1File: '8-25.mp4',
+    option2File: '14.mp4'
+  },
+  {
+    file: '2.mp4',
+    option1File: '6.mp4',
+    option2File: '3.mp4'
+  },
+  {
+    file: '6.mp4',
+    option1File: '8.mp4',
+    option2File: '13.mp4'
+  },
+  {
+    file: '8.mp4',
+    option1File: '10.mp4',
+    option2File: '10-25.mp4',
+    option3File: '10.mp4',
+    option4File: '10.mp4'
+  },
+  {
+    file: '13.mp4',
+    option1File: '8.mp4',
+    option2File: '14.mp4'
+  },
+  {
+    file: '10.mp4',
+    option1File: '11.mp4',
+    option2File: '12.mp4'
+  },
 ];
 
 function maxByKey(obj) {
+  let maxVal = -Infinity;
   let maxKey;
-  let maxVal;
 
   for (let key in obj) {
-    if (Ember.isEmpty(maxVal) || obj[key] < maxVal) {
+    if (obj[key] > maxVal) {
       maxKey = key;
       maxVal = obj[key];
     } 
@@ -42,11 +120,13 @@ function findByKey(key, keyValue, coll) {
 export default Ember.Component.extend({
   classNames: ['video-layout'],
 
-  optionAVotes: 0,
-  optionBVotes: 0,
-  optionCVotes: 0,
+  option1Votes: 0,
+  option2Votes: 0,
+  option3Votes: 0,
+  option4Votes: 0,
+  displayVotes: false,
   currentVideoFile: null,
-  displayQuestion: false,
+  countdown: 0,
 
   currentVideoURL: Ember.computed('currentVideoData', function() {
     return `videos/${this.get('currentVideoData.file')}`;
@@ -57,62 +137,73 @@ export default Ember.Component.extend({
 
     let ws = new WebSocket(`ws://${location.host}/ws`);
 
-    ws.onmessage = message => this.voteReceived(JSON.parse(message.data).value);
+    ws.onmessage = message => {
+      Ember.run(this, 'voteReceived', JSON.parse(message.data).value)
+    };
 
     this.set('currentVideoData', manifest[0]);
   },
 
   didInsertElement() {
-    this.initCurrentVideo();
-  },
-
-  initCurrentVideo() {
     let el = this.$('video')[0];
 
     el.addEventListener('ended', () => this.videoEnded(), true); 
   },
 
   videoEnded() {
-    this.set('displayQuestion', true);
+    if (this.get('currentVideoData.isLastVideo')) {
+      return;
+    }
 
-    setTimeout(() => {
-      this.playNextVideo();
-    }, 1000 * 15)
+    this.setProperties({
+      option1Votes: 0,
+      option2Votes: 0,
+      option3Votes: 0,
+      option4Votes: 0,
+      displayVotes: true,
+      countdown: 15
+    });
+
+    Ember.run.later(this, 'countdownTick', 1000);
+  },
+
+  countdownTick() {
+      this.set('countdown', this.get('countdown') - 1);
+      
+      if (this.get('countdown') <= 0) {
+        this.set('displayVotes', false);
+        this.playNextVideo();
+
+        return;
+      }
+
+      Ember.run.later(this, 'countdownTick', 1000);
   },
 
   playNextVideo() {
-    let votes = this.getProperties('optionAVotes', 'optionBVotes', 'optionCVotes');
+    let votes = this.getProperties('option1Votes', 'option2Votes', 'option3Votes', 'option4Votes');
     let maxVotesKey = maxByKey(votes);
 
     let nextVideoFileKey = {
-      'optionAVotes': 'optionAFile',
-      'optionBVotes': 'optionBFile',
-      'optionCVotes': 'optionCFile'
+      'option1Votes': 'option1File',
+      'option2Votes': 'option2File',
+      'option3Votes': 'option3File',
+      'option4Votes': 'option4File'
     }[maxVotesKey];
 
     let nextVideoFile = this.get(`currentVideoData.${nextVideoFileKey}`);
     let nextVideoData = findByKey('file', nextVideoFile, manifest);
 
-    this.setProperties({
-      displayQuestion: false,
-      currentVideoData: nextVideoData,
-      optionAVotes: 0,
-      optionBVotes: 0,
-      optionCVotes: 0
-    });
+    this.set('currentVideoData', nextVideoData);
 
     this.initCurrentVideo()
   },
 
   voteReceived(value) {
-    if (value === 1 || value === 'a' || value === 'A') {
-      this.incrementProperty('optionAVotes');
-    } else if (value === 2 || value === 'b' || value === 'B') {
-      this.incrementProperty('optionBVotes');
-    } else if (value === 3 || value === 'c' || value === 'C') {
-      this.incrementProperty('optionCVotes');
+    if (['1', '2', '3', '4'].includes(value)) {
+      this.incrementProperty(`option${value}Votes`);
     } else {
-      throw new Error(`Unknown value '${value}' received.`);
+      console.warn(`Unknown value '${value}' received.`);
     }
   }
 });

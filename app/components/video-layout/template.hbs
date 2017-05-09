@@ -1,35 +1,38 @@
-<div class="top">
-  {{#if displayQuestion}}
-    <div class="question">
-        {{currentVideoData.question}}
-    </div>
-    <div class="number">
-      (415) 965-7251
-    </div>
-  {{/if}}
+{{#if displayVotes}}
+<div class="countdown">
+  Deciding in {{countdown}}&hellip;
 </div>
+{{/if}}
 <video src={{currentVideoURL}} autoplay></video>
-<div class="bottom">
-  {{#if displayQuestion}}
+{{#if displayVotes}}
+  <div class="options">
     <div class="option">
-      {{vote-counter votes=optionAVotes}}
+      {{vote-counter votes=option1Votes}}
       <div class="option-text">
-        <em>A.</em> {{currentVideoData.optionAText}}
+        <em>1</em>
       </div>
     </div>
     <div class="option">
-      {{vote-counter votes=optionBVotes}}
+      {{vote-counter votes=option2Votes}}
       <div class="option-text">
-        <em>B.</em> {{currentVideoData.optionBText}}
+        <em>2</em>
       </div>
     </div>
-    {{#if currentVideoData.optionCText}}
+    {{#if currentVideoData.option3File}}
       <div class="option">
-        {{vote-counter votes=optionCVotes}}
+        {{vote-counter votes=option3Votes}}
         <div class="option-text">
-          {{currentVideoData.optionCText}}
+          <em>3</em>
         </div>
       </div>
     {{/if}}
-  {{/if}}
-</div>
+    {{#if currentVideoData.option4File}}
+      <div class="option">
+        {{vote-counter votes=option3Votes}}
+        <div class="option-text">
+          <em>4</em>
+        </div>
+      </div>
+    {{/if}}
+  </div>
+{{/if}}

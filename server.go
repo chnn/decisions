@@ -63,5 +63,5 @@ func main() {
 	http.HandleFunc("/vote", voteHandler)
 	http.Handle("/", http.FileServer(http.Dir("dist")))
 
-	http.ListenAndServe(":4201", nil)
+	http.ListenAndServe(":80", nil)
 }
