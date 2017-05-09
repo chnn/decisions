@@ -6,6 +6,10 @@ export default Ember.Controller.extend({
   actions: {
     startVideo() {
       this.set('startedVideo', true);
+    },
+
+    restart() {
+      this.set('startedVideo', false);
     }
   }
 });

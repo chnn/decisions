@@ -1,38 +1,44 @@
-{{#if displayVotes}}
-<div class="countdown">
-  Deciding in {{countdown}}&hellip;
-</div>
-{{/if}}
-<video src={{currentVideoURL}} autoplay></video>
-{{#if displayVotes}}
-  <div class="options">
-    <div class="option">
-      {{vote-counter votes=option1Votes}}
-      <div class="option-text">
-        <em>1</em>
-      </div>
-    </div>
-    <div class="option">
-      {{vote-counter votes=option2Votes}}
-      <div class="option-text">
-        <em>2</em>
-      </div>
-    </div>
-    {{#if currentVideoData.option3File}}
-      <div class="option">
-        {{vote-counter votes=option3Votes}}
-        <div class="option-text">
-          <em>3</em>
-        </div>
-      </div>
-    {{/if}}
-    {{#if currentVideoData.option4File}}
-      <div class="option">
-        {{vote-counter votes=option3Votes}}
-        <div class="option-text">
-          <em>4</em>
-        </div>
-      </div>
-    {{/if}}
+{{#if ended}}
+  <div class="menu-container">
+    <div class="menu-btn bordered-box" {{action restart}}>Restart.</div>
   </div>
+{{else}}
+  {{#if displayVotes}}
+  <div class="countdown">
+    Deciding in {{countdown}}&hellip;
+  </div>
+  {{/if}}
+  <video src={{currentVideoURL}} autoplay></video>
+  {{#if displayVotes}}
+    <div class="options">
+      <div class="option">
+        {{vote-counter votes=option1Votes}}
+        <div class="option-text">
+          <em>1</em>
+        </div>
+      </div>
+      <div class="option">
+        {{vote-counter votes=option2Votes}}
+        <div class="option-text">
+          <em>2</em>
+        </div>
+      </div>
+      {{#if currentVideoData.option3File}}
+        <div class="option">
+          {{vote-counter votes=option3Votes}}
+          <div class="option-text">
+            <em>3</em>
+          </div>
+        </div>
+      {{/if}}
+      {{#if currentVideoData.option4File}}
+        <div class="option">
+          {{vote-counter votes=option3Votes}}
+          <div class="option-text">
+            <em>4</em>
+          </div>
+        </div>
+      {{/if}}
+    </div>
+  {{/if}}
 {{/if}}

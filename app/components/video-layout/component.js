@@ -127,6 +127,7 @@ export default Ember.Component.extend({
   displayVotes: false,
   currentVideoFile: null,
   countdown: 0,
+  ended: false,
 
   currentVideoURL: Ember.computed('currentVideoData', function() {
     return `videos/${this.get('currentVideoData.file')}`;
@@ -152,6 +153,8 @@ export default Ember.Component.extend({
 
   videoEnded() {
     if (this.get('currentVideoData.isLastVideo')) {
+      this.set('ended', true);
+
       return;
     }
 
