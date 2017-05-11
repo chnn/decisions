@@ -13,8 +13,8 @@ const manifest = [
   },
   {
     file: '4.mp4',
-    option1File: '5.mp4',
-    option2File: '7.mp4'
+    option1File: '7.mp4',
+    option2File: '5.mp4'
   },
   {
     file: '5.mp4',
@@ -23,8 +23,8 @@ const manifest = [
   },
   {
     file: '7.mp4',
-    option1File: '8-5.mp4',
-    option2File: '13-5.mp4'
+    option1File: '13-5.mp4',
+    option2File: '8-5.mp4'
   },
   {
     file: '6-5.mp4',
@@ -73,8 +73,8 @@ const manifest = [
   },
   {
     file: '6.mp4',
-    option1File: '8.mp4',
-    option2File: '13.mp4'
+    option1File: '13.mp4',
+    option2File: '8.mp4'
   },
   {
     file: '8.mp4',
